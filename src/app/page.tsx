@@ -1,6 +1,11 @@
-const Page = () => {
+import {caller} from "@/trpc/server";
+
+const Page = async () => {
+    const users = await caller.getUsers()
   return (
-      <div>Hello world!</div>
+      <div>
+          {JSON.stringify(users)}
+      </div>
   );
 }
 
