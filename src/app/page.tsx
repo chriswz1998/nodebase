@@ -1,10 +1,12 @@
+import {requireAuth} from "@/lib/auth-utils";
 import {caller} from "@/trpc/server";
 
 const Page = async () => {
-    const users = await caller.getUsers()
+    await requireAuth()
+    const data = await caller.getUsers()
   return (
-      <div>
-          {JSON.stringify(users)}
+      <div className="min-h-screen min-w-screen flex items-center justify-center">
+          protected page {JSON.stringify(data)}
       </div>
   );
 }
