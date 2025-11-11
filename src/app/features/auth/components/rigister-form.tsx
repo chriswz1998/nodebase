@@ -11,6 +11,7 @@ import {Input} from "@/components/ui/input";
 import Link from "next/link";
 import {authClient} from "@/lib/auth-client";
 import {toast} from "sonner";
+import Image from "next/image";
 
 const registerSchema = z.object({
     email: z.email('Please enter valid email address'),
@@ -55,7 +56,7 @@ export function RegisterForm() {
         <div className="flex flex-col gap-6">
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle className={'text-blue-300'}>Get Started</CardTitle>
+                    <CardTitle>Get Started</CardTitle>
                     <CardDescription>Create your account to get started</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -64,9 +65,11 @@ export function RegisterForm() {
                            <div className="grid gap-6">
                                <div className="flex flex-col gap-4">
                                    <Button variant='outline' className='w-full' type='button' disabled={isPending}>
+                                       <Image src='/github.svg' width={20} height={20} alt={'Github'} />
                                        Continue with GitHub
                                    </Button>
                                    <Button variant='outline' className='w-full' type='button' disabled={isPending}>
+                                       <Image src='/google.svg' width={20} height={20} alt={'Google'} />
                                        Continue with Google
                                    </Button>
                                </div>
@@ -114,7 +117,7 @@ export function RegisterForm() {
                                </div>
                                <div className="text-center text-sm">
                                    Already have an account?{" "}
-                                   <Link href="/login">Login</Link>
+                                   <Link href="/login" className={'text-blue-500'}>Login</Link>
                                </div>
                            </div>
                        </form>

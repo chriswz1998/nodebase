@@ -2,7 +2,7 @@ import {RegisterForm} from "@/app/features/auth/components/rigister-form";
 
 const Page = () => {
     return (
-        <div><RegisterForm/></div>
+        <RegisterForm/>
     )
 }
 
