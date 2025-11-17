@@ -7,8 +7,7 @@ export const appRouter = createTRPCRouter({
         await inngest.send({
             name: 'execute/ai',
         })
-        return {success: true, message: 'Job queued successfully.'};
-    }),
+        return {success: true, message: 'Job queued successfully.'};    }),
     getWorkflows: protectedProcedure
         .query(({ctx}) => {
             return prisma.workflow.findMany()
