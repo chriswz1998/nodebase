@@ -1,4 +1,4 @@
-import {RegisterForm} from "@/app/features/auth/components/rigister-form";
+import {RegisterForm} from "@/features/auth/components/rigister-form";
 
 const Page = () => {
     return (
