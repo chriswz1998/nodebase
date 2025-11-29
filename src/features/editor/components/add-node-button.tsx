@@ -14,7 +14,7 @@ export const AddNodeButton = memo(() => {
                 className={'bg-background'}
                 size={"icon"}
                 variant={"outline"}
-                onClick={() => {}}
+                onClick={() => {setSelectorOpen(true)}}
             >
                 <PlusIcon/>
             </Button>
