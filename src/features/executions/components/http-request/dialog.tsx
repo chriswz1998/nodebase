@@ -1,11 +1,11 @@
 'use client'
 
 import {
-    Dialog, DialogClose,
+    Dialog,
     DialogContent,
     DialogDescription, DialogFooter,
     DialogHeader,
-    DialogTitle, DialogTrigger,
+    DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,9 +20,7 @@ import {
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
@@ -39,48 +37,44 @@ const formSchema = z.object({
     body: z.string().optional()
 })
 
-export type FormType = z.infer<typeof formSchema>
+export type HttpRequestFormValues = z.infer<typeof formSchema>
 
 interface Props {
     open: boolean
     onOpenChange: (open: boolean) => void
-    onSubmit: (value: FormType) => void
-    defaultEndpoint?: string
-    defaultMethod?: 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH'
-    defaultBody?: string
+    onSubmit: (value: HttpRequestFormValues) => void
+    defaultValues?: Partial<HttpRequestFormValues>
 }
 
 export const HttpRequestDialog = ({
                                       open,
                                       onOpenChange,
                                       onSubmit,
-                                      defaultEndpoint="",
-                                      defaultMethod="GET",
-                                      defaultBody=""
+                                      defaultValues = {}
 }: Props) => {
-    const form = useForm<FormType>({
+    const form = useForm<HttpRequestFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            endpoint: defaultEndpoint,
-            method: defaultMethod,
-            body: defaultBody
+            endpoint: defaultValues?.endpoint || "",
+            method: defaultValues?.method || "GET",
+            body: defaultValues?.body || ""
         },
     })
 
     useEffect(() => {
         if (open) {
             form.reset({
-                endpoint: defaultEndpoint,
-                method: defaultMethod,
-                body: defaultBody
+                endpoint: defaultValues?.endpoint || "",
+                method: defaultValues?.method || "GET",
+                body: defaultValues?.body || ""
             })
         }
-    }, [open, defaultEndpoint, defaultMethod, defaultBody, form])
+    }, [open, defaultValues, form])
 
     const watchMethod = form.watch("method")
     const showBodyField = ["POST", "PUT", "PATCH"].includes(watchMethod)
 
-    const handleSubmit = (values: FormType) => {
+    const handleSubmit = (values: HttpRequestFormValues) => {
         console.log(1213123)
         onSubmit(values)
         onOpenChange(false)
