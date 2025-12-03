@@ -3,9 +3,11 @@ import {NodeExecutor} from "@/features/executions/types";
 import {manualTriggerExecutor} from "@/features/triggers/components/manual-trigger/executor";
 import {httpRequestExecutor} from "@/features/executions/components/http-request/executor";
 
+
 export const executorRegistry: Record<NodeType, NodeExecutor> = {
     [NodeType.MANUAL_TRIGGER]: manualTriggerExecutor,
     [NodeType.INITIAL]: manualTriggerExecutor,
+    // @ts-ignore
     [NodeType.HTTP_REQUEST]: httpRequestExecutor
 }
 
