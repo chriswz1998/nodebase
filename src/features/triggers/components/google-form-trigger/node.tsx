@@ -1,29 +1,29 @@
 import {memo, useState} from "react";
 import {NodeProps} from "@xyflow/react";
 import {BaseTriggerNode} from "@/features/triggers/components/base-trigger-node";
-import {MousePointerIcon} from "lucide-react";
-import {ManualTriggerDialog} from "@/features/triggers/components/manual-trigger/dialog";
+import {GoogleFormTriggerDialog} from "@/features/triggers/components/google-form-trigger/dialog";
 import {useNodeStatus} from "@/features/executions/hooks/use-node-states";
-import {MANUAL_TRIGGER_CHANNEL_NAME} from "@/inngest/channels/manual-trigger";
-import {fetchManualTriggerRealtimeToken} from "@/features/triggers/components/manual-trigger/actions";
+import {GOOGLE_FORM_TRIGGER_CHANNEL_NAME} from "@/inngest/channels/google-form-trigger";
+import {fetchGoogleFormRealtimeToken} from "@/features/triggers/components/google-form-trigger/actions";
 
-export const ManualTriggerNode = memo((props: NodeProps) => {
+export const GoogleFormTrigger = memo((props: NodeProps) => {
     const [dialogOpen, setDialogOpen] = useState(false)
     const handleOpenSettings = () => setDialogOpen(true)
     const nodeStatus = useNodeStatus({
         nodeId: props.id,
-        channel: MANUAL_TRIGGER_CHANNEL_NAME,
+        channel: GOOGLE_FORM_TRIGGER_CHANNEL_NAME,
         topic: "status",
-        refreshToken: fetchManualTriggerRealtimeToken
+        refreshToken: fetchGoogleFormRealtimeToken
     })
 
     return (
         <>
-            <ManualTriggerDialog open={dialogOpen} onOpenChange={setDialogOpen}/>
+            <GoogleFormTriggerDialog open={dialogOpen} onOpenChange={setDialogOpen}/>
             <BaseTriggerNode
                 {...props}
-                icon={MousePointerIcon}
-                name={"When clicking 'Execute workflow"}
+                icon={'/googleform.svg'}
+                name={"Google Form"}
+                description={"When form is submitted"}
                 status={nodeStatus}
                 onSettings={handleOpenSettings}
                 onDoubleClick={handleOpenSettings}

@@ -9,7 +9,8 @@
     "lint": "biome check",
     "format": "biome format --write",
     "inngest:dev": "inngest-cli dev",
-    "dev:all": "mprocs"
+    "dev:all": "mprocs",
+    "ngrok:dev": "ngrok http --url=rapid-terrier-active.ngrok-free.app 3000"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.33",
