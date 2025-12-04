@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet"
 import {NodeType} from "@/generated/prisma/enums";
 import React, {useCallback} from "react";
-import {GlobeIcon, Icon, MousePointerIcon} from "lucide-react";
+import {GlobeIcon, MousePointerIcon} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {useReactFlow} from "@xyflow/react";
 import {toast} from "sonner";
@@ -29,6 +29,12 @@ const triggerNodes: NodeTypeOption[] = [
         label: "Trigger manually",
         description: "Runs the flow on clicking a button. Good for getting started quickly.",
         icon: MousePointerIcon
+    },
+    {
+        type: NodeType.GOOGLE_FORM_TRIGGER,
+        label: "Google Form",
+        description: "Runs the flow when a Google Form is submitted.",
+        icon: '/googleform.svg'
     }
 ]
 
@@ -127,7 +133,7 @@ export function NodeSelector({open, onOpenChange, children}: NodeSelectorProps) 
                                                 <img
                                                     src={Icon}
                                                     alt={nodeType.label}
-                                                    className={'size-5 object-contain rounded-sm'}
+                                                    className={'size-5 object-contain'}
                                                 />
                                             ) : (
                                                 <Icon className={'size-5'}/>
