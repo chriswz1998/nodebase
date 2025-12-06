@@ -23,6 +23,10 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useEffect} from "react";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import Image from "next/image";
+import {useCredentialsByType} from "@/features/credentials/hooks/use-credentials";
+import {Credentialtype} from "@/generated/prisma/enums";
 
 
 const formSchema = z.object({
@@ -31,6 +35,7 @@ const formSchema = z.object({
         .regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/, {
             message: "Variable name must start with a letter or underscore and container only letters, numbers, and underscores"
         }),
+    credentialId: z.string().min(1, {message: "Credential is required"}),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, {message: "User Prompt is required"})
 })
@@ -50,9 +55,11 @@ export const OpenAIDialog = ({
                                       onSubmit,
                                       defaultValues = {}
 }: Props) => {
+    const {data: credentials, isLoading: isLoadingCredentials} = useCredentialsByType(Credentialtype.OPENAI)
     const form = useForm<OpenAIFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            credentialId: defaultValues?.credentialId || "",
             variableName: defaultValues?.variableName || "",
             systemPrompt: defaultValues?.systemPrompt || "",
             userPrompt: defaultValues?.userPrompt || ""
@@ -62,6 +69,7 @@ export const OpenAIDialog = ({
     useEffect(() => {
         if (open) {
             form.reset({
+                credentialId: defaultValues?.credentialId || "",
                 variableName: defaultValues?.variableName || "",
                 systemPrompt: defaultValues?.systemPrompt || "",
                 userPrompt: defaultValues?.userPrompt || ""
@@ -100,6 +108,44 @@ export const OpenAIDialog = ({
                                         Use this name to reference the result in other nodes: {" "}
                                         {`{{${watchVariableName}.text}}`}
                                     </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="credentialId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>OpenAI Credential</FormLabel>
+                                    <Select
+                                        defaultValue={field.value}
+                                        onValueChange={field.onChange}
+                                        disabled={isLoadingCredentials || !credentials?.length}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select a credential" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {
+                                                credentials?.map((option) => (
+                                                    <SelectItem value={option.id} key={option.id}>
+                                                        <div className={'flex items-center gap-2'}>
+                                                            <Image
+                                                                src={'/openai.svg'}
+                                                                alt={'OpenAI'}
+                                                                width={16}
+                                                                height={16}
+                                                            />
+                                                            {option.name}
+                                                        </div>
+                                                    </SelectItem>
+                                                ))
+                                            }
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}

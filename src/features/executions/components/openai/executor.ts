@@ -4,6 +4,8 @@ import Handlebars from 'handlebars'
 import {generateText} from "ai";
 import {createOpenAI} from "@ai-sdk/openai";
 import {openAiChannel} from "@/inngest/channels/openai";
+import {geminiChannel} from "@/inngest/channels/gemini";
+import prisma from "@/lib/db";
 
 Handlebars.registerHelper("json", (context) => {
     const stringified = JSON.stringify(context, null, 2);
@@ -11,6 +13,7 @@ Handlebars.registerHelper("json", (context) => {
 });
 
 type OpenAIData = {
+    credentialId?: string;
     variableName?: string;
     systemPrompt?: string;
     userPrompt?: string;
@@ -29,6 +32,17 @@ export const OpenAIExecutor: NodeExecutor<OpenAIData> = async ({
             status: "loading"
         })
     )
+
+    if (!data.credentialId) {
+        await publish(
+            geminiChannel().status({
+                nodeId,
+                status: "error"
+            })
+        )
+
+        throw new NonRetriableError("OPENAI node: Credential is missing")
+    }
 
     if (!data.variableName) {
         await publish(
@@ -57,10 +71,20 @@ export const OpenAIExecutor: NodeExecutor<OpenAIData> = async ({
         : "You are a helpful assistant"
     const userPrompt = Handlebars.compile(data.userPrompt)(context)
 
-    const credentialValue = process.env.OPENAI_API_KEY
+    const credential = await step.run("get-credential", () => {
+        return prisma.credential.findUnique({
+            where: {
+                id: data.credentialId
+            }
+        })
+    })
+
+    if (!credential) {
+        throw new NonRetriableError("Credential not found")
+    }
 
     const openai = createOpenAI({
-        apiKey: credentialValue
+        apiKey: credential.value
     })
 
     try {
@@ -79,9 +103,7 @@ export const OpenAIExecutor: NodeExecutor<OpenAIData> = async ({
             }
         )
 
-        const text = steps[0].content[0].type === "text"
-                        ? steps[0].content[0].text
-                        : ""
+        const text = steps[0].content.find(i => i.type === "text")?.text || ""
 
         await publish(
             openAiChannel().status({

@@ -9,9 +9,10 @@ import {fetchOpenAIRealtimeToken} from "@/features/executions/components/openai/
 import {OPENAI_CHANNEL_NAME} from "@/inngest/channels/openai";
 
 type OpenAINodeData = {
-     variableName?: string;
-     systemPrompt?: string;
-     userPrompt?: string;
+    credentialId?: string;
+    variableName?: string;
+    systemPrompt?: string;
+    userPrompt?: string;
 }
 
 type OpenAINodeType = Node<OpenAINodeData>
