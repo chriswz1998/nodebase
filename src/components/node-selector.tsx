@@ -62,6 +62,18 @@ const executionNodes: NodeTypeOption[] = [
         label: "OpenAI",
         description: "Use OpenAI to generate text",
         icon: '/openai.svg'
+    },
+    {
+        type: NodeType.DISCORD,
+        label: "Discord",
+        description: "Send a message to discord",
+        icon: '/discord.svg'
+    },
+    {
+        type: NodeType.SLACK,
+        label: "Slack",
+        description: "Send a message to Slack",
+        icon: '/slack.svg'
     }
 ]
 
